@@ -1,0 +1,90 @@
+/**
+ * Exercício 1: Sistema de Gerenciamento de Biblioteca [cite: 1]
+ * Implementação das classes Livro e Biblioteca conforme requisitos. [cite: 10, 21]
+ */
+
+// 1. Definição da classe Livro [cite: 10]
+class Livro {
+    // Propriedades com modificadores de acesso e tipagem explícita [cite: 13, 36, 38]
+    public codigo: number; [cite: 15]
+    public titulo: string; [cite: 16]
+    public autor: string; [cite: 17]
+    public disponivel: boolean; [cite: 18]
+
+    /**
+     * Construtor que inicializa todas as propriedades [cite: 20]
+     */
+    constructor(codigo: number, titulo: string, autor: string, disponivel: boolean = true) {
+        this.codigo = codigo;
+        this.titulo = titulo;
+        this.autor = autor;
+        this.disponivel = disponivel;
+    }
+}
+
+// 2. Definição da classe Biblioteca [cite: 21]
+class Biblioteca {
+    // Propriedade privada para encapsulamento [cite: 22, 37]
+    private acervo: Livro[] = []; [cite: 23]
+
+    /**
+     * Adiciona um novo livro ao acervo [cite: 26]
+     */
+    public adicionarLivro(livro: Livro): void { [cite: 26, 38]
+        this.acervo.push(livro);
+        console.log(`Livro "${livro.titulo}" (Código: ${livro.codigo}) adicionado ao acervo.`);
+    }
+
+    /**
+     * Marca o livro como indisponível pelo seu código [cite: 27]
+     */
+    public registrarEmprestimo(codigo: number): void { [cite: 27, 38]
+        const livro = this.acervo.find(l => l.codigo === codigo);
+
+        // Tratamento de erro para livro inexistente 
+        if (!livro) {
+            console.error(`Erro: Não foi possível realizar o empréstimo. Código ${codigo} não encontrado.`);
+            return;
+        }
+
+        if (livro.disponivel) {
+            livro.disponivel = false; [cite: 27]
+            console.log(`Empréstimo registrado: "${livro.titulo}" agora está indisponível.`);
+        } else {
+            console.warn(`Aviso: O livro "${livro.titulo}" já se encontra emprestado.`);
+        }
+    }
+
+    /**
+     * Retorna se o livro está disponível ou não [cite: 28]
+     */
+    public consultarDisponibilidade(codigo: number): boolean { [cite: 28, 38]
+        const livro = this.acervo.find(l => l.codigo === codigo);
+
+        if (!livro) {
+            console.error(`Erro: Consulta falhou. Livro com código ${codigo} não existe.`); [cite: 39]
+            return false;
+        }
+
+        return livro.disponivel; [cite: 28]
+    }
+}
+
+// 3. Funções de teste do sistema [cite: 29]
+
+const minhaBiblioteca = new Biblioteca();
+
+// Cadastro de pelo menos três livros 
+minhaBiblioteca.adicionarLivro(new Livro(1, "Dom Casmurro", "Machado de Assis"));
+minhaBiblioteca.adicionarLivro(new Livro(2, "A Hora da Estrela", "Clarice Lispector"));
+minhaBiblioteca.adicionarLivro(new Livro(3, "O Cortiço", "Aluísio Azevedo"));
+
+// Registrar empréstimo de um dos livros 
+minhaBiblioteca.registrarEmprestimo(2);
+
+// Consultar disponibilidade e imprimir no console [cite: 32, 33]
+const statusLivro2 = minhaBiblioteca.consultarDisponibilidade(2);
+console.log(`Disponibilidade do livro código 2: ${statusLivro2 ? "Disponível" : "Emprestado"}`);
+
+const statusLivro3 = minhaBiblioteca.consultarDisponibilidade(3);
+console.log(`Disponibilidade do livro código 3: ${statusLivro3 ? "Disponível" : "Emprestado"}`);
